@@ -1,8 +1,9 @@
 import { Node, SkillNode, SupportNode, SkillTree } from './SkillTree.js';
 import { v4 as uuidv4 } from 'uuid';
 import { getNodeByName } from './NodeData.js';
-import { DamageCalculator } from './DamageCalculator.js';
+import { DamageCalculator } from './PlayerDamageCalculator.js';
 import { Item } from './Item.js';
+import { EnemyType, Enemy } from './Enemy.js';
 
 export class App {
   private skillTree: SkillTree;
@@ -12,26 +13,40 @@ export class App {
   }
 
   init(): void {
-    console.log("Initializing application...");
-    
-    this.testMakeSkillTree();
-    
-    console.log("\n##############################################\n");
-    this.testSkillCasting();
-    console.log("\n##############################################\n");
-    this.testSkillCasting();
-    console.log("\n##############################################\n");
+    this.testMakeEnemy();
   }
 
+  //Creates an enemy and tests its attack
+  testMakeEnemy(): void {
+    const fireElementalType: EnemyType = {
+      name: "Fire Elemental",
+      health: 1000,
+      resistances: {
+        fire: 0.2,
+        cold: 0.1,
+        lightning: 0.15,
+        physical: 0.05,
+      },
+      skillSet: [
+        { id: "0", chance: 0.5, },
+        { id: "1", chance: 0.4, },
+        { id: "4", chance: 0.1, },
+      ],
+    };
+
+    const fireElemental = new Enemy(fireElementalType);
+    fireElemental.attack();
+
+  }
+
+  // Chooses a random skill from the skill tree and calculates its damage
   testSkillCasting(): void {
     let castSkill = this.rollSkill(this.skillTree.root.id);
-    console.log("Rolled skill:", castSkill.name);
-
     const damage = this.skillTree.damageCalculator.calculateDamage(castSkill as SkillNode);
-    console.log(`Calculated damage for ${castSkill.name}:`, damage);
-
+    console.log(`Damage for ${castSkill.name}:`, damage);
   }
 
+  // Creates a skill tree 
   testMakeSkillTree(): void {
     const support_LeftpawsFavor: Node = this.createNodeInstanceByName("Leftpaw's Favor")!;
     const support_SplinteredFate: Node = this.createNodeInstanceByName("Splintered Fate")!;
@@ -46,6 +61,7 @@ export class App {
     this.skillTree.addChild(support_SplinteredFate.id, skill_Fireball);
   }
 
+  // Generates a random item and shows its modifiers
   testGenerateItem(): void {
     const randomWeapon = new Item({
       name: "Emnite Relic",
@@ -55,7 +71,7 @@ export class App {
     console.log(randomWeapon);
   }
 
-  // Receive a skill id and roll the skill in a random way. Return false if the node is a SkillNode 
+  // Choose a random SkillNode from the skill tree 
   rollSkill(id: string): Node {
     const randomSkill = this.skillTree.leaves[Math.floor(Math.random() * this.skillTree.leaves.length)];
     return randomSkill;
@@ -65,7 +81,8 @@ export class App {
     return this.skillTree;
   }
 
-
+  // Creates a new node instance based on the name from NodeData
+  // Append uuid to enable multiple instances of the same node
   createNodeInstanceByName(name: string): Node | null {
     const template = getNodeByName(name);
     if (!template) return null;
