@@ -34,7 +34,7 @@ export class DamageCalculator {
     };
 
     // finds and returns all support nodes that affect the skill node
-    findPathToSkillNode(root: Node, targetId: string, path: Node[] = []): Node[] | null {
+    private findPathToSkillNode(root: Node, targetId: string, path: Node[] = []): Node[] | null {
         // Add current node to path
         const newPath = [...path, root];
 
@@ -111,13 +111,13 @@ export class DamageCalculator {
         return returnDamage;
     }
 
-    initRollDamage(skill: SkillNode): void {
+    private initRollDamage(skill: SkillNode): void {
         for (const [type, range] of Object.entries(skill.baseDamage)) {
             this.damage[type] = this.rollDamage(type, skill);
         }  
     }
 
-    rollDamage(type: string, skill: SkillNode): number{
+    private rollDamage(type: string, skill: SkillNode): number{
         const range = skill.baseDamage[type];
         if (!range) {
             console.error(`No damage range found for type: ${type}`);
