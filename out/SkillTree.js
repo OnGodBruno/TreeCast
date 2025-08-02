@@ -1,4 +1,4 @@
-import { DamageCalculator } from "./DamageCalculator.js";
+import { DamageCalculator } from "./PlayerDamageCalculator.js";
 export class SkillTree {
     constructor() {
         this.leaves = [];

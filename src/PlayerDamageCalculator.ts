@@ -54,7 +54,7 @@ export class DamageCalculator {
 
     // Every time you cast a skill, call this function
     // The skill is not attribute of the DamageCalculator, it is passed as an argument
-    calculateDamage(skill: SkillNode): number {
+    calculateDamage(skill: SkillNode, debug: boolean = false): number {
         this.skillTree = this.skillTree.getSkillTree();
         this.initRollDamage(skill);
         let orderOfCalculation = this.findPathToSkillNode(this.skillTree.root, skill.id);
@@ -65,23 +65,24 @@ export class DamageCalculator {
         }
 
         // Apply effects from root to leaf
-        console.log("Initial damage:", this.damage);
+        if (debug) console.log("Initial damage:", this.damage);
+
         for (const node of orderOfCalculation) {
             const effectFn = this.effects[node.name];
             if (effectFn) {
                 effectFn(skill);
-                console.log(`Applied effect from ${node.name}`);
+                if (debug) console.log(`Applied effect from ${node.name}`);
             }
         }
 
         //Initial rolled damage
-        console.log("Damage before modifiers:", this.damage);
+        if (debug) console.log("Damage before modifiers:", this.damage);
 
         //Apply damage multiplier
         for (const [type, range] of Object.entries(skill.baseDamage)) {
             if (this.damageMultiplier[type]) {
                 this.damage[type] *= (1 + this.damageMultiplier[type]);
-                console.log(`Applied multiplier for ${type}:`, this.damageMultiplier[type]);
+                if (debug) console.log(`Applied multiplier for ${type}:`, this.damageMultiplier[type]);
             }
         }
         
@@ -89,16 +90,16 @@ export class DamageCalculator {
         for (const type in this.damage) {
             this.totalDamage += this.damage[type];
         }
-        console.log("Total damage before critical hit:", this.totalDamage);
+        if (debug) console.log("Total damage before critical hit:", this.totalDamage);
 
         // Apply critical chance
         if (Math.random() < this.criticalChance) {
             this.totalDamage *= this.criticalMultiplier;
-            console.log("Critical hit! Damage multiplied by", this.criticalMultiplier);
+            if (debug) console.log("Critical hit! Damage multiplied by", this.criticalMultiplier);
         }
 
         this.totalDamage = Math.floor(this.totalDamage);
-        console.log("Final damage:", this.totalDamage);
+        if (debug) console.log("Final damage:", this.totalDamage);
         
         const returnDamage = this.totalDamage;
         // Reset for next calculation
