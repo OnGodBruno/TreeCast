@@ -1,4 +1,6 @@
-export type BaseNode ={
+import { DamageCalculator } from "./DamageCalculator.js";
+
+export type BaseNode = {
   id: string;
   name: string;
   tags: string[];
@@ -7,10 +9,10 @@ export type BaseNode ={
 }
 
 export type SkillNode = BaseNode & {
-  baseDamage: [number, number];
+  baseDamage: Record<string, [number, number]>;
 };
 
-export type SupportNode = BaseNode &{
+export type SupportNode = BaseNode & {
   children_amount: number;
   children: Array<SkillNode | SupportNode>;
 };
@@ -20,8 +22,10 @@ export type Node = SkillNode | SupportNode;
 export class SkillTree {
   root: SkillNode | SupportNode;
   leaves: Node[] = [];
+  damageCalculator: DamageCalculator;
 
   constructor() {
+    this.damageCalculator = new DamageCalculator(this);
     // Placeholder root node
     this.root = {
       id: "-1",
@@ -74,6 +78,10 @@ export class SkillTree {
         this.traverse(callback, child);
       }
     }
+  }
+
+  getSkillTree(): SkillTree {
+    return this;
   }
 }
 
