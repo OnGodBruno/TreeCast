@@ -1,9 +1,10 @@
 import { Node, SkillNode, SupportNode, SkillTree } from './SkillTree.js';
 import { v4 as uuidv4 } from 'uuid';
-import { getNodeByName } from './NodeData.js';
 import { DamageCalculator } from './PlayerDamageCalculator.js';
 import { Item } from './Item.js';
 import { EnemyType, Enemy } from './Enemy.js';
+import { Character } from './Character.js';
+import { Combat } from './Combat.js';
 
 export class App {
   private skillTree: SkillTree;
@@ -13,14 +14,29 @@ export class App {
   }
 
   init(): void {
-    this.testMakeEnemy();
+    this.testCombat();
   }
 
-  //Creates an enemy and tests its attack
-  testMakeEnemy(): void {
+  testCombat(): void {
+    const fireElemental = this.testMakeEnemy();
+    const character = new Character("Timofee");
+
+    const combat = new Combat({
+      enemy: fireElemental,
+      character: character,
+    });
+
+    combat.startCombat();
+  }
+
+
+  //Creates an enemy
+  testMakeEnemy(): Enemy {
     const fireElementalType: EnemyType = {
       name: "Fire Elemental",
       health: 1000,
+      max_health: 1000,
+      celerity: 4,
       resistances: {
         fire: 0.2,
         cold: 0.1,
@@ -35,8 +51,7 @@ export class App {
     };
 
     const fireElemental = new Enemy(fireElementalType);
-    fireElemental.attack();
-
+    return fireElemental;
   }
 
   // Chooses a random skill from the skill tree and calculates its damage
@@ -44,21 +59,6 @@ export class App {
     let castSkill = this.rollSkill(this.skillTree.root.id);
     const damage = this.skillTree.damageCalculator.calculateDamage(castSkill as SkillNode);
     console.log(`Damage for ${castSkill.name}:`, damage);
-  }
-
-  // Creates a skill tree 
-  testMakeSkillTree(): void {
-    const support_LeftpawsFavor: Node = this.createNodeInstanceByName("Leftpaw's Favor")!;
-    const support_SplinteredFate: Node = this.createNodeInstanceByName("Splintered Fate")!;
-    const support_FireMastery: Node = this.createNodeInstanceByName("Fire Mastery")!;
-    const skill_Fireball: Node = this.createNodeInstanceByName("Fireball")!;
-    const skill_LavaBurst: Node = this.createNodeInstanceByName("Lava Burst")!;
-
-    this.skillTree.setRoot(support_LeftpawsFavor);
-    this.skillTree.addChild(support_LeftpawsFavor.id, support_FireMastery);
-    this.skillTree.addChild(support_FireMastery.id, support_SplinteredFate);
-    this.skillTree.addChild(support_SplinteredFate.id, skill_LavaBurst);
-    this.skillTree.addChild(support_SplinteredFate.id, skill_Fireball);
   }
 
   // Generates a random item and shows its modifiers
@@ -81,15 +81,4 @@ export class App {
     return this.skillTree;
   }
 
-  // Creates a new node instance based on the name from NodeData
-  // Append uuid to enable multiple instances of the same node
-  createNodeInstanceByName(name: string): Node | null {
-    const template = getNodeByName(name);
-    if (!template) return null;
-
-    return {
-      ...template,
-      id: uuidv4(),  // unique ID
-    };
-  }
 }
