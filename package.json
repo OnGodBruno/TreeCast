@@ -1,5 +1,33 @@
 {
   "dependencies": {
+    "express": "^5.1.0",
     "uuid": "^11.1.0"
+  },
+  "name": "treecast",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jdeichsel/TreeCast.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/jdeichsel/TreeCast/issues"
+  },
+  "homepage": "https://github.com/jdeichsel/TreeCast#readme",
+  "devDependencies": {
+    "esbuild": "^0.25.8",
+    "nodemon": "^3.1.10",
+    "typescript": "^5.9.2"
   }
 }

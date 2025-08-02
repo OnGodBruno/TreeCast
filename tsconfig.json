@@ -1,10 +1,22 @@
 {
+  "ts-node": {
+    // these options are overrides used only by ts-node
+    // same as the --compilerOptions flag and the TS_NODE_COMPILER_OPTIONS environment variable
+    "compilerOptions": {
+      "module": "commonjs"
+    }
+  },
   "compilerOptions": {
-    "target": "ES5",
-    "module": "CommonJS",
-    "outDir": "out",
+    "target": "ES6",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "rootDir": "src",
+    "outDir": "./out",
     "sourceMap": true,
     "strict": true,
-    "lib": ["es2016", "dom"],
-  }
+    "esModuleInterop": true,
+    "lib": ["es2020", "dom"],
+    "downlevelIteration": true,
+  },
+   "include": ["src"]
 }

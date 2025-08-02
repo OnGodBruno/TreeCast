@@ -1,15 +1,11 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.nodeData = void 0;
-exports.getNodeByName = getNodeByName;
-exports.nodeData = [
+export const nodeData = [
     {
         id: "0",
         name: "Fireball",
         tags: ["skill", "fire", "elemental", "spell", "projectile"],
         type: "skill",
         description: "A powerful fire-based attack that launches a ball of flame at the enemy",
-        baseDamage: [80, 120],
+        baseDamage: { "fire": [80, 120] },
     },
     {
         id: "1",
@@ -17,7 +13,7 @@ exports.nodeData = [
         tags: ["skill", "fire", "elemental", "spell", "area"],
         type: "skill",
         description: "A devastating area-of-effect fire attack that erupts from the ground, dealing damage to all enemies in the vicinity",
-        baseDamage: [60, 80],
+        baseDamage: { "fire": [60, 80] },
     },
     {
         id: "2",
@@ -35,7 +31,7 @@ exports.nodeData = [
         type: "support",
         children_amount: 2,
         children: [],
-        description: "+10% to critical strike chance",
+        description: "+20% to critical strike chance",
     },
     {
         id: "3",
@@ -47,8 +43,8 @@ exports.nodeData = [
         description: "Your damage is Lucky (rolls twice and takes the better outcome)",
     },
 ];
-function getNodeByName(name) {
-    var lowerName = name.toLowerCase();
-    return exports.nodeData.find(function (node) { return node.name.toLowerCase() === lowerName; });
+export function getNodeByName(name) {
+    const lowerName = name.toLowerCase();
+    return nodeData.find(node => node.name.toLowerCase() === lowerName);
 }
 //# sourceMappingURL=NodeData.js.map
