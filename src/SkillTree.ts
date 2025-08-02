@@ -1,4 +1,6 @@
 import { DamageCalculator } from "./PlayerDamageCalculator.js";
+import { getNodeByName } from './NodeData.js';
+import { v4 as uuidv4 } from 'uuid';
 
 export type BaseNode = {
   id: string;
@@ -39,6 +41,12 @@ export class SkillTree {
     this.leaves = [];
   }
 
+  randomSkill(): SkillNode | null {
+    if (this.leaves.length === 0) return null;
+    const randomIndex = Math.floor(Math.random() * this.leaves.length);
+    return this.leaves[randomIndex] as SkillNode;
+  }
+
   setRoot(node: SkillNode | SupportNode): void {
     this.root = node;
   }
@@ -69,19 +77,20 @@ export class SkillTree {
     return null;
   }
 
-  // Traverse the tree and apply a callback to each node
-  traverse(callback: (node: SkillNode | SupportNode) => void, node: SkillNode | SupportNode | null = this.root): void {
-    if (!node) return;
-    callback(node);
-    if ('children' in node) {
-      for (const child of node.children) {
-        this.traverse(callback, child);
-      }
-    }
-  }
-
   getSkillTree(): SkillTree {
     return this;
+  }
+
+  // Creates a new node instance based on the name from NodeData
+  // Append uuid to enable multiple instances of the same node
+  createNodeInstanceByName(name: string): Node | null {
+    const template = getNodeByName(name);
+    if (!template) return null;
+
+    return {
+      ...template,
+      id: uuidv4(),  // unique ID
+    };
   }
 }
 
