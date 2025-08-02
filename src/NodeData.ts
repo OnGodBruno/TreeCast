@@ -1,4 +1,4 @@
-import type { SkillNode, SupportNode, Node } from './SkillTree';
+import type { SkillNode, SupportNode, Node } from './SkillTree.js';
 
 export const nodeData: Node[] = [
   {
@@ -7,7 +7,7 @@ export const nodeData: Node[] = [
     tags: ["skill", "fire", "elemental", "spell", "projectile"],
     type: "skill",
     description: "A powerful fire-based attack that launches a ball of flame at the enemy",
-    baseDamage: [80, 120],
+    baseDamage: {"fire": [80, 120]},
   },
   {
     id: "1",
@@ -15,7 +15,7 @@ export const nodeData: Node[] = [
     tags: ["skill", "fire", "elemental", "spell", "area"],
     type: "skill",
     description: "A devastating area-of-effect fire attack that erupts from the ground, dealing damage to all enemies in the vicinity",
-    baseDamage: [60, 80],
+    baseDamage: {"fire": [60, 80]},
   },
   {
     id: "2",
@@ -33,7 +33,7 @@ export const nodeData: Node[] = [
       type: "support",
       children_amount: 2,
       children: [],
-      description: "+10% to critical strike chance",
+      description: "+20% to critical strike chance",
   },
   {
     id: "3",
