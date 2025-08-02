@@ -54,14 +54,14 @@ export class DamageCalculator {
 
     // Every time you cast a skill, call this function
     // The skill is not attribute of the DamageCalculator, it is passed as an argument
-    calculateDamage(skill: SkillNode, debug: boolean = false): number {
+    calculateDamage(skill: SkillNode, debug: boolean = false): [string, number] {
         this.skillTree = this.skillTree.getSkillTree();
         this.initRollDamage(skill);
         let orderOfCalculation = this.findPathToSkillNode(this.skillTree.root, skill.id);
 
         if (!orderOfCalculation) {
             console.error("No path found to the skill node, cannot calculate damage.");
-            return 0;
+            return ["Error", 0];
         }
 
         // Apply effects from root to leaf
@@ -109,7 +109,7 @@ export class DamageCalculator {
         this.criticalChance = 0;
         this.criticalMultiplier = 1.5;
 
-        return returnDamage;
+        return [skill.name, returnDamage];
     }
 
     private initRollDamage(skill: SkillNode): void {
