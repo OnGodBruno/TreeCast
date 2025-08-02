@@ -5,6 +5,6 @@
     "outDir": "out",
     "sourceMap": true,
     "strict": true,
-    "lib": ["es2015", "dom"],
+    "lib": ["es2016", "dom"],
   }
 }

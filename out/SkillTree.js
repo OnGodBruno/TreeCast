@@ -1,18 +1,20 @@
 "use strict";
-// src/SkillTree.ts
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SkillTree = void 0;
 var SkillTree = /** @class */ (function () {
     function SkillTree() {
+        this.leaves = [];
         // Placeholder root node
         this.root = {
             id: "-1",
-            name: 'Root',
+            name: 'ROOT',
             tags: [],
+            type: 'support',
             children_amount: 0,
             children: [],
-            description: 'Root of the skill tree',
+            description: 'Placeholder',
         };
+        this.leaves = [];
     }
     SkillTree.prototype.setRoot = function (node) {
         this.root = node;
@@ -24,6 +26,9 @@ var SkillTree = /** @class */ (function () {
         var parent = this.findNodeById(parentId, this.root);
         if (parent && 'children' in parent && parent.children.length < parent.children_amount) {
             parent.children.push(child);
+            if (child.type === 'skill') {
+                this.leaves.push(child);
+            }
             return true;
         }
         return false;

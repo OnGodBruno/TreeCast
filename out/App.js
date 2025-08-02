@@ -15,51 +15,37 @@ exports.App = void 0;
 var SkillTree_1 = require("./SkillTree");
 var uuid_1 = require("uuid");
 var NodeData_1 = require("./NodeData");
+var DamageCalculator_1 = require("./DamageCalculator");
 var App = /** @class */ (function () {
     function App() {
         this.skillTree = new SkillTree_1.SkillTree();
     }
     App.prototype.init = function () {
         console.log("Initializing application...");
-        var skill_Fireball = this.createSkillInstanceByName("Fireball");
-        var skill_LavaBurst = this.createSkillInstanceByName("Lava Burst");
-        var support_FireMastery = this.createSupportInstanceByName("Fire Mastery");
-        var support_LuckyFang = this.createSupportInstanceByName("Lucky Fang");
-        this.skillTree.setRoot(support_FireMastery);
-        this.skillTree.addChild(support_FireMastery.id, skill_Fireball);
-        this.skillTree.addChild(support_FireMastery.id, support_LuckyFang);
-        this.skillTree.addChild(support_LuckyFang.id, skill_LavaBurst);
-        var castSkill = this.roll(this.skillTree.root.id);
+        var support_LeftpawsFavor = this.createNodeInstanceByName("Leftpaw's Favor");
+        var support_SplinteredFate = this.createNodeInstanceByName("Splintered Fate");
+        var support_FireMastery = this.createNodeInstanceByName("Fire Mastery");
+        var skill_Fireball = this.createNodeInstanceByName("Fireball");
+        var skill_LavaBurst = this.createNodeInstanceByName("Lava Burst");
+        this.skillTree.setRoot(support_LeftpawsFavor);
+        this.skillTree.addChild(support_LeftpawsFavor.id, support_FireMastery);
+        this.skillTree.addChild(support_FireMastery.id, support_SplinteredFate);
+        this.skillTree.addChild(support_SplinteredFate.id, skill_LavaBurst);
+        this.skillTree.addChild(support_SplinteredFate.id, skill_Fireball);
+        var castSkill = this.rollSkill(this.skillTree.root.id);
         console.log("Rolled skill:", castSkill.name);
+        var damageCalculator = new DamageCalculator_1.DamageCalculator(this.skillTree, castSkill);
     };
     // Receive a skill id and roll the skill in a random way. Return false if the node is a SkillNode 
-    App.prototype.roll = function (id) {
-        var currentNode = this.skillTree.findNodeById(id);
-        if (currentNode && 'children' in currentNode) {
-            var nextStep = this.randInt(0, currentNode.children.length - 1);
-            return this.roll(currentNode.children[nextStep].id);
-        }
-        else if (currentNode && 'id' in currentNode) {
-            return currentNode;
-        }
-        else {
-            throw new Error("Node not found or is not a SkillNode");
-        }
+    App.prototype.rollSkill = function (id) {
+        var randomSkill = this.skillTree.leaves[Math.floor(Math.random() * this.skillTree.leaves.length)];
+        return randomSkill;
     };
     App.prototype.getSkillTree = function () {
         return this.skillTree;
     };
-    App.prototype.randInt = function (min, max) {
-        return Math.floor(Math.random() * (max - min + 1)) + min;
-    };
-    App.prototype.createSkillInstanceByName = function (name) {
-        var template = (0, NodeData_1.getSkillByName)(name);
-        if (!template)
-            return null;
-        return __assign(__assign({}, template), { id: (0, uuid_1.v4)() });
-    };
-    App.prototype.createSupportInstanceByName = function (name) {
-        var template = (0, NodeData_1.getSupportByName)(name);
+    App.prototype.createNodeInstanceByName = function (name) {
+        var template = (0, NodeData_1.getNodeByName)(name);
         if (!template)
             return null;
         return __assign(__assign({}, template), { id: (0, uuid_1.v4)() });

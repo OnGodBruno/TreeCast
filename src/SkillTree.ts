@@ -1,35 +1,38 @@
-// src/SkillTree.ts
-
-export type SkillNode = {
+export type BaseNode ={
   id: string;
   name: string;
   tags: string[];
+  type: "skill" | "support";
+  description: string;
+}
+
+export type SkillNode = BaseNode & {
   baseDamage: [number, number];
-  description?: string;
 };
 
-export type SupportNode = {
-  id: string;
-  name: string;
-  tags: string[];
+export type SupportNode = BaseNode &{
   children_amount: number;
   children: Array<SkillNode | SupportNode>;
-  description?: string;
 };
 
+export type Node = SkillNode | SupportNode;
+
 export class SkillTree {
-  root: SkillNode | SupportNode | null;
+  root: SkillNode | SupportNode;
+  leaves: Node[] = [];
 
   constructor() {
     // Placeholder root node
     this.root = {
       id: "-1",
-      name: 'Root',
+      name: 'ROOT',
       tags: [],
+      type: 'support',
       children_amount: 0,
       children: [],
-      description: 'Root of the skill tree',
+      description: 'Placeholder',
     };
+    this.leaves = [];
   }
 
   setRoot(node: SkillNode | SupportNode): void {
@@ -42,6 +45,9 @@ export class SkillTree {
     const parent = this.findNodeById(parentId, this.root);
     if (parent && 'children' in parent && parent.children.length < parent.children_amount) {
       parent.children.push(child);
+      if (child.type === 'skill') {
+        this.leaves.push(child);
+      }
       return true;
     }
     return false;

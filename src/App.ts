@@ -1,6 +1,7 @@
-import { SkillNode, SupportNode, SkillTree } from './SkillTree';
+import { Node, SkillNode, SupportNode, SkillTree } from './SkillTree';
 import { v4 as uuidv4 } from 'uuid';
-import { getSkillByName, getSupportByName } from './NodeData';
+import { getNodeByName } from './NodeData';
+import { DamageCalculator } from './DamageCalculator';
 
 export class App {
   private skillTree: SkillTree;
@@ -12,58 +13,45 @@ export class App {
   init(): void {
     console.log("Initializing application...");
 
-    const skill_Fireball: SkillNode = this.createSkillInstanceByName("Fireball")!;
+    
 
-    const skill_LavaBurst: SkillNode = this.createSkillInstanceByName("Lava Burst")!;
 
-    const support_FireMastery: SupportNode = this.createSupportInstanceByName("Fire Mastery")!;
+    const support_LeftpawsFavor: Node = this.createNodeInstanceByName("Leftpaw's Favor")!;
 
-    const support_LuckyFang: SupportNode = this.createSupportInstanceByName("Lucky Fang")!;
+    const support_SplinteredFate: Node = this.createNodeInstanceByName("Splintered Fate")!;
 
-    this.skillTree.setRoot(support_FireMastery);
-    this.skillTree.addChild(support_FireMastery.id, skill_Fireball);
-    this.skillTree.addChild(support_FireMastery.id, support_LuckyFang);
-    this.skillTree.addChild(support_LuckyFang.id, skill_LavaBurst);
+    const support_FireMastery: Node = this.createNodeInstanceByName("Fire Mastery")!;
 
-    let castSkill = this.roll(this.skillTree.root!.id);
+    const skill_Fireball: Node = this.createNodeInstanceByName("Fireball")!;
+
+    const skill_LavaBurst: Node = this.createNodeInstanceByName("Lava Burst")!;
+
+    this.skillTree.setRoot(support_LeftpawsFavor);
+    this.skillTree.addChild(support_LeftpawsFavor.id, support_FireMastery);
+    this.skillTree.addChild(support_FireMastery.id, support_SplinteredFate);
+    this.skillTree.addChild(support_SplinteredFate.id, skill_LavaBurst);
+    this.skillTree.addChild(support_SplinteredFate.id, skill_Fireball);
+
+    let castSkill = this.rollSkill(this.skillTree.root.id);
     console.log("Rolled skill:", castSkill.name);
+
+    var damageCalculator = new DamageCalculator(this.skillTree, castSkill as SkillNode);
+
   }
 
   // Receive a skill id and roll the skill in a random way. Return false if the node is a SkillNode 
-  roll(id: string): SkillNode {
-    let currentNode = this.skillTree.findNodeById(id);
-    if (currentNode && 'children' in currentNode) {
-      let nextStep = this.randInt(0, currentNode.children.length - 1)
-      return this.roll(currentNode.children[nextStep].id);
-
-    } else if (currentNode && 'id' in currentNode) {
-      return currentNode;
-
-    } else {
-      throw new Error("Node not found or is not a SkillNode");
-    }
+  rollSkill(id: string): Node {
+    const randomSkill = this.skillTree.leaves[Math.floor(Math.random() * this.skillTree.leaves.length)];
+    return randomSkill;
   }
 
   getSkillTree(): SkillTree {
     return this.skillTree;
   }
 
-  randInt(min: number, max: number): number {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-  }
 
-  createSkillInstanceByName(name: string): SkillNode | null {
-    const template = getSkillByName(name);
-    if (!template) return null;
-
-    return {
-      ...template,
-      id: uuidv4(),  // unique ID
-    };
-  }
-
-  createSupportInstanceByName(name: string): SupportNode | null {
-    const template = getSupportByName(name);
+  createNodeInstanceByName(name: string): Node | null {
+    const template = getNodeByName(name);
     if (!template) return null;
 
     return {
