@@ -11,6 +11,9 @@
     "test": "test"
   },
   "scripts": {
+    "build": "tsc",
+    "start": "node out/index.js",
+    "dev": "nodemon --exec \"npm run build && npm start\" --ext ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -26,6 +29,8 @@
   },
   "homepage": "https://github.com/jdeichsel/TreeCast#readme",
   "devDependencies": {
+    "@types/express": "^5.0.3",
+    "@types/node": "^24.1.0",
     "esbuild": "^0.25.8",
     "nodemon": "^3.1.10",
     "typescript": "^5.9.2"

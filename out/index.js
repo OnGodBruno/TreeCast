@@ -1,5 +1,6 @@
 // src/index.ts
-import { App } from './App.js';
-const app = new App();
-app.init();
+import { WebServer } from './WebServer.js';
+console.log('🌳 Starting TreeCast Web Server...');
+const server = new WebServer(3000);
+server.start();
 //# sourceMappingURL=index.js.map

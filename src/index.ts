@@ -1,5 +1,7 @@
 // src/index.ts
-import { App } from './App.js';
+import { WebServer } from './WebServer.js';
 
-const app = new App();
-app.init();
+console.log('🌳 Starting TreeCast Web Server...');
+
+const server = new WebServer(3000);
+server.start();
