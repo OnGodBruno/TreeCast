@@ -11,6 +11,8 @@ type Effect = (skill: SkillNode) => void;
 // 5. Round the final damage value
 
 
+//TODO: when using a fire skill and you get added cold damage from somewhere -> add the cold tag (maybe always so that user can see it)
+//TODO: the level in the tree should give a buff effect to a support (like +5% increased modifier for each level in the tree , additive) 
 export class DamageCalculator {
     private skillTree: SkillTree;
     private damage: Record<string, number> = {};

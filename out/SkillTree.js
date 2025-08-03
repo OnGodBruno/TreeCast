@@ -1,6 +1,9 @@
 import { DamageCalculator } from "./PlayerDamageCalculator.js";
 import { getNodeByName } from './NodeData.js';
 import { v4 as uuidv4 } from 'uuid';
+//TODO: need a check to see if the skill tree is valid
+//TODO: the level in the tree should give a buff effect to a support (like +5% increased modifier for each level in the tree , additive).
+//      Probably add this into the SupportNode Type
 export class SkillTree {
     constructor() {
         this.leaves = [];

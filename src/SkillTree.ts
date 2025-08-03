@@ -21,6 +21,10 @@ export type SupportNode = BaseNode & {
 
 export type Node = SkillNode | SupportNode;
 
+//TODO: need a check to see if the skill tree is valid
+//TODO: the level in the tree should give a buff effect to a support (like +5% increased modifier for each level in the tree , additive).
+//      Probably add this into the SupportNode Type
+
 export class SkillTree {
   root: SkillNode | SupportNode;
   leaves: Node[] = [];
