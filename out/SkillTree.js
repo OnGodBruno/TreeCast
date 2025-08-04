@@ -14,17 +14,22 @@ export class SkillTree {
             name: 'ROOT',
             tags: [],
             type: 'support',
-            children_amount: 0,
+            childrenAmount: 0,
             children: [],
             description: 'Placeholder',
         };
         this.leaves = [];
     }
     randomSkill() {
-        if (this.leaves.length === 0)
+        console.log('randomSkill called, leaves:', this.leaves.length, this.leaves.map(l => l.name));
+        if (this.leaves.length === 0) {
+            console.warn('No leaves available for skill selection!');
             return null;
+        }
         const randomIndex = Math.floor(Math.random() * this.leaves.length);
-        return this.leaves[randomIndex];
+        const selectedSkill = this.leaves[randomIndex];
+        console.log('Selected skill:', selectedSkill === null || selectedSkill === void 0 ? void 0 : selectedSkill.name, 'with baseDamage:', selectedSkill === null || selectedSkill === void 0 ? void 0 : selectedSkill.baseDamage);
+        return selectedSkill;
     }
     setRoot(node) {
         this.root = node;
@@ -34,7 +39,7 @@ export class SkillTree {
         if (!this.root)
             return false;
         const parent = this.findNodeById(parentId, this.root);
-        if (parent && 'children' in parent && parent.children.length < parent.children_amount) {
+        if (parent && 'children' in parent && parent.children.length < parent.childrenAmount) {
             parent.children.push(child);
             if (child.type === 'skill') {
                 this.leaves.push(child);

@@ -15,7 +15,7 @@ export type SkillNode = BaseNode & {
 };
 
 export type SupportNode = BaseNode & {
-  children_amount: number;
+  childrenAmount: number;
   children: Array<SkillNode | SupportNode>;
 };
 
@@ -26,7 +26,7 @@ export type Node = SkillNode | SupportNode;
 //      Probably add this into the SupportNode Type
 
 export class SkillTree {
-  root: SkillNode | SupportNode;
+  root: Node
   leaves: Node[] = [];
   damageCalculator: DamageCalculator;
 
@@ -38,7 +38,7 @@ export class SkillTree {
       name: 'ROOT',
       tags: [],
       type: 'support',
-      children_amount: 0,
+      childrenAmount: 0,
       children: [],
       description: 'Placeholder',
     };
@@ -46,9 +46,15 @@ export class SkillTree {
   }
 
   randomSkill(): SkillNode | null {
-    if (this.leaves.length === 0) return null;
+    console.log('randomSkill called, leaves:', this.leaves.length, this.leaves.map(l => l.name));
+    if (this.leaves.length === 0) {
+      console.warn('No leaves available for skill selection!');
+      return null;
+    }
     const randomIndex = Math.floor(Math.random() * this.leaves.length);
-    return this.leaves[randomIndex] as SkillNode;
+    const selectedSkill = this.leaves[randomIndex] as SkillNode;
+    console.log('Selected skill:', selectedSkill?.name, 'with baseDamage:', selectedSkill?.baseDamage);
+    return selectedSkill;
   }
 
   setRoot(node: SkillNode | SupportNode): void {
@@ -59,7 +65,7 @@ export class SkillTree {
   addChild(parentId: string, child: SkillNode | SupportNode): boolean {
     if (!this.root) return false;
     const parent = this.findNodeById(parentId, this.root);
-    if (parent && 'children' in parent && parent.children.length < parent.children_amount) {
+    if (parent && 'children' in parent && parent.children.length < parent.childrenAmount) {
       parent.children.push(child);
       if (child.type === 'skill') {
         this.leaves.push(child);

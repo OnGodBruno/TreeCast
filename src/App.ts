@@ -42,6 +42,7 @@ export class App {
         cold: 0.1,
         lightning: 0.15,
         physical: 0.05,
+        arcane: 0.0,
       },
       skillSet: [
         { id: "0", chance: 0.5, },

@@ -37,6 +37,7 @@ export class Character {
                     "cold": 0,
                     "lightning": 0,
                     "physical": 0,
+                    "arcane": 0,
                 },
             },
             skillTree: new SkillTree(),
@@ -66,13 +67,24 @@ export class Character {
 
     attack(): [string, number] {
         const randomSkill = this.skillTree.randomSkill();
+        console.log('Character attack - selected skill:', randomSkill?.name);
+        
+        if (!randomSkill) {
+            console.warn('No skill available for attack, using basic attack');
+            return ['Basic Attack', 10]; // Fallback attack
+        }
+        
         const [name, damage] = this.skillTree.damageCalculator.calculateDamage(randomSkill as SkillNode);
-
         return [name, damage];
     }
 
     getSkillTree(): SkillTree {
         return this.character.skillTree;
+    }
+    
+    setSkillTree(skillTree: SkillTree): void {
+        this.skillTree = skillTree;
+        this.character.skillTree = skillTree;
     }
 
     importCharacterData(data: CharacterType): void {

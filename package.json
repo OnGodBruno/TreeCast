@@ -1,6 +1,8 @@
 {
   "dependencies": {
     "express": "^5.1.0",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
     "uuid": "^11.1.0"
   },
   "name": "treecast",
@@ -11,9 +13,12 @@
     "test": "test"
   },
   "scripts": {
-    "build": "tsc",
+    "setup": "npm install && npm run build && npm start",
+    "install-and-run": "npm install && npm run dev",
+    "build": "npx tsc && node node_modules\\webpack\\bin\\webpack.js --config webpack.config.cjs",
+    "build:webpack": "node node_modules\\webpack\\bin\\webpack.js --config webpack.config.cjs",
     "start": "node out/index.js",
-    "dev": "nodemon --exec \"npm run build && npm start\" --ext ts",
+    "dev": "nodemon --exec \"npm run build && npm start\" --ext ts,tsx",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -29,10 +34,21 @@
   },
   "homepage": "https://github.com/jdeichsel/TreeCast#readme",
   "devDependencies": {
+    "@babel/core": "^7.28.0",
+    "@babel/preset-env": "^7.28.0",
+    "@babel/preset-react": "^7.27.1",
+    "@babel/preset-typescript": "^7.27.1",
     "@types/express": "^5.0.3",
     "@types/node": "^24.1.0",
+    "@types/react": "^19.1.9",
+    "@types/react-dom": "^19.1.7",
+    "babel-loader": "^10.0.0",
     "esbuild": "^0.25.8",
     "nodemon": "^3.1.10",
-    "typescript": "^5.9.2"
+    "ts-loader": "^9.5.2",
+    "typescript": "^5.9.2",
+    "webpack": "^5.101.0",
+    "webpack-cli": "^6.0.1",
+    "webpack-dev-server": "^5.2.2"
   }
 }

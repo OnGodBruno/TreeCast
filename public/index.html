@@ -154,55 +154,170 @@
             border-radius: 5px;
             background: rgba(255,255,255,0.1);
         }
+
+        /* Skill Tree Builder Styles */
+        .skill-tree-builder {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .root-selection, .tree-building {
+            margin: 20px 0;
+        }
+
+        .skill-options, .support-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .skill-option, .support-option {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid transparent;
+            border-radius: 10px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .skill-option:hover, .support-option:hover {
+            border-color: #4ecdc4;
+            background: rgba(78, 205, 196, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .skill-option h4, .support-option h4 {
+            margin: 0 0 10px 0;
+            color: #4ecdc4;
+        }
+
+        .skill-option p, .support-option p {
+            margin: 5px 0;
+            color: #e0e0e0;
+        }
+
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-top: 10px;
+        }
+
+        .tag {
+            background: rgba(78, 205, 196, 0.3);
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            color: #4ecdc4;
+        }
+
+        .tree-visualization {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            overflow: auto;
+        }
+
+        .tree-svg {
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .support-selection {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .completion {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .complete-button {
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .complete-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+        }
+
+        .tree-complete {
+            text-align: center;
+            padding: 40px;
+            background: rgba(76, 175, 80, 0.2);
+            border-radius: 15px;
+            border: 2px solid #4CAF50;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>🌳 TreeCast Combat Arena ⚔️</h1>
         
-        <div class="turn-indicator" id="turnIndicator">
-            Prepare for Combat!
-        </div>
+        <!-- React App Root -->
+        <div id="react-root"></div>
+        
+        <!-- Combat UI (hidden initially) -->
+        <div id="combat-ui" style="display: none;">
+            <div class="turn-indicator" id="turnIndicator">
+                Prepare for Combat!
+            </div>
 
-        <div class="combat-arena">
-            <div class="character-panel">
-                <h3>🛡️ Character</h3>
-                <h4 id="characterName">Loading...</h4>
-                <div class="health-bar-container">
-                    <div class="health-bar">
-                        <div class="health-fill character-health" id="characterHealthBar" style="width: 100%"></div>
+            <div class="combat-arena">
+                <div class="character-panel">
+                    <h3>🛡️ Character</h3>
+                    <h4 id="characterName">Loading...</h4>
+                    <div class="health-bar-container">
+                        <div class="health-bar">
+                            <div class="health-fill character-health" id="characterHealthBar" style="width: 100%"></div>
+                        </div>
+                        <div id="characterHealth">HP: ---/---</div>
                     </div>
-                    <div id="characterHealth">HP: ---/---</div>
+                    <div class="stats" id="characterStats">
+                        Celerity: ---<br>
+                        Status: Ready
+                    </div>
                 </div>
-                <div class="stats" id="characterStats">
-                    Celerity: ---<br>
-                    Status: Ready
+
+                <div class="enemy-panel">
+                    <h3>👹 Enemy</h3>
+                    <h4 id="enemyName">Loading...</h4>
+                    <div class="health-bar-container">
+                        <div class="health-bar">
+                            <div class="health-fill enemy-health" id="enemyHealthBar" style="width: 100%"></div>
+                        </div>
+                        <div id="enemyHealth">HP: ---/---</div>
+                    </div>
+                    <div class="stats" id="enemyStats">
+                        Celerity: ---<br>
+                        Status: Ready
+                    </div>
                 </div>
             </div>
 
-            <div class="enemy-panel">
-                <h3>👹 Enemy</h3>
-                <h4 id="enemyName">Loading...</h4>
-                <div class="health-bar-container">
-                    <div class="health-bar">
-                        <div class="health-fill enemy-health" id="enemyHealthBar" style="width: 100%"></div>
-                    </div>
-                    <div id="enemyHealth">HP: ---/---</div>
-                </div>
-                <div class="stats" id="enemyStats">
-                    Celerity: ---<br>
-                    Status: Ready
-                </div>
+            <div class="controls">
+                <button onclick="startCombat()" id="startBtn">Start Combat</button>
+                <button onclick="resetCombat()" id="resetBtn">Reset</button>
             </div>
-        </div>
 
-        <div class="controls">
-            <button onclick="startCombat()" id="startBtn">Start Combat</button>
-            <button onclick="resetCombat()" id="resetBtn">Reset</button>
-        </div>
-
-        <div class="combat-log" id="combatLog">
-            <div class="system-message">Welcome to TreeCast! Click "Start Combat" to begin.</div>
+            <div class="combat-log" id="combatLog">
+                <div class="system-message">Welcome to TreeCast! Your custom skill tree is ready for combat.</div>
+            </div>
         </div>
     </div>
 
@@ -280,6 +395,23 @@
             }
         }
 
+        // Function to show combat UI (called from React app)
+        function showCombatUI() {
+            document.getElementById('combat-ui').style.display = 'block';
+        }
+
+        // Function to hide combat UI (called from React app)
+        function hideCombatUI() {
+            document.getElementById('combat-ui').style.display = 'none';
+        }
+
+        // Make functions available globally for React app
+        window.showCombatUI = showCombatUI;
+        window.hideCombatUI = hideCombatUI;
+        window.pollCombatUpdates = pollCombatUpdates;
+        window.updateUI = updateUI;
+        window.combatState = combatState;
+
         async function pollCombatUpdates() {
             if (!combatState.isActive) return;
 
@@ -343,5 +475,6 @@
             addLogEntry('TreeCast initialized. Ready for combat!', 'system');
         };
     </script>
+    <script src="bundle.js"></script>
 </body>
 </html>
